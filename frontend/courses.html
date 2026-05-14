@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>College Enquiry Chatbot | Courses</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/images/favicon.svg" />
+    <link rel="stylesheet" href="./assets/style.css" />
+    <style>
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(255, 255, 255, 0.1);
+        border-top-color: var(--brand);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      .error-msg {
+        color: #ef4444 !important;
+        font-weight: 600;
+      }
+      .course-card:hover {
+        transform: translateY(-5px);
+        transition: transform 0.2s ease;
+      }
+    </style>
+  </head>
+  <body class="theme-chatbot">
+    <div class="nav">
+      <div class="container nav-inner">
+        <a class="brand" href="./index.html">
+          <div class="brand-badge">
+            <img src="./assets/images/logo-white.svg" alt="Logo" />
+          </div>
+          <span>College Enquiry Chatbot</span>
+        </a>
+        <div class="nav-links">
+          <a href="./index.html">Home</a>
+          <a href="./about.html">About</a>
+          <a class="active" href="./courses.html">Courses</a>
+          <a href="./admission.html">Admission</a>
+          <a href="./contact.html">Contact</a>
+          <a href="./chatbot.html">Chatbot</a>
+        </div>
+      </div>
+    </div>
+
+    <main class="main-content">
+      <div class="container page-title">
+        <h2>Academic Programs</h2>
+        <p class="muted">Explore our wide range of undergraduate, postgraduate, and certificate courses.</p>
+      </div>
+
+      <div class="container section">
+        <!-- Loading State -->
+        <div id="loadingState">
+          <div class="card" style="text-align: center; padding: 60px;">
+            <div class="spinner"></div>
+            <p class="muted" style="margin-top: 20px; font-size: 16px;">Connecting to academic database...</p>
+          </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" style="display: none;">
+          <div class="card" style="text-align: center; padding: 60px; border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05);">
+            <h3 style="color: #ef4444; margin-top: 0;">Connection Failed</h3>
+            <p id="errorMessage" class="muted" style="margin-bottom: 20px;">We were unable to load the course list. Please ensure the backend server is running and try again.</p>
+            <button class="btn primary" onclick="location.reload()">Retry Connection</button>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" style="display: none;">
+          <div class="card" style="text-align: center; padding: 60px;">
+            <h3 style="margin-top: 0;">No Programs Found</h3>
+            <p class="muted">Our course catalog is currently being updated. Please check back shortly.</p>
+          </div>
+        </div>
+
+        <!-- Courses Grid -->
+        <div id="coursesGrid" class="grid-3" style="display: none;">
+          <!-- Dynamic cards go here -->
+        </div>
+      </div>
+    </main>
+
+    <div class="footer">
+      <div class="container row">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <img src="./assets/images/logo-white.svg" alt="Logo" style="width: 24px; height: 24px;" />
+          <span>© 2026 College Enquiry Chatbot</span>
+        </div>
+        <div class="muted">Data synced in real-time with college ERP</div>
+      </div>
+    </div>
+
+    <script src="./assets/chatbot.js"></script>
+    <script>
+      (function() {
+        const loading = document.getElementById("loadingState");
+        const error = document.getElementById("errorState");
+        const empty = document.getElementById("emptyState");
+        const grid = document.getElementById("coursesGrid");
+        const errorMsg = document.getElementById("errorMessage");
+
+        /**
+         * Resolves the API base URL with fallback to current origin or localhost:5000
+         */
+        function getApiBase() {
+          const qs = new URLSearchParams(window.location.search || "");
+          const override = window.API_BASE || qs.get("apiBase") || localStorage.getItem("college_api_base") || "";
+          if (override) return override.replace(/\/$/, "");
+          
+          const { protocol, hostname, port } = window.location;
+          // If we're already on the backend port, use relative paths
+          if (hostname === "localhost" && port === "5000") return "";
+          if (hostname === "127.0.0.1" && port === "5000") return "";
+          
+          // Fallback for local development or direct file access
+          return "http://localhost:5000";
+        }
+
+        /**
+         * Formats fee amount to Indian Rupees format
+         */
+        function formatFee(amount) {
+          if (!amount || isNaN(Number(amount))) return "Consult Fees Table";
+          return new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 0
+          }).format(amount);
+        }
+
+        async function loadCourses() {
+          const API_BASE = getApiBase();
+          const targetUrl = `${API_BASE}/courses`;
+          console.log(`[Courses] Initiating fetch from: ${targetUrl}`);
+          
+          // Safety timeout to prevent infinite loading
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => {
+            console.warn("[Courses] Fetch timed out after 10s");
+            controller.abort();
+          }, 10000);
+
+          try {
+            const res = await fetch(targetUrl, { signal: controller.signal });
+            clearTimeout(timeoutId);
+            
+            console.log(`[Courses] Server responded with status: ${res.status}`);
+            
+            if (!res.ok) {
+              const errData = await res.json().catch(() => ({}));
+              throw new Error(errData.error || `System Error (Status ${res.status})`);
+            }
+
+            const data = await res.json();
+            console.log("[Courses] Data received:", data);
+            
+            const courses = Array.isArray(data.courses) ? data.courses : [];
+            console.log(`[Courses] Found ${courses.length} courses.`);
+
+            // Hide loading
+            loading.style.display = "none";
+            grid.innerHTML = ""; // Clear existing
+
+            if (courses.length === 0) {
+              console.warn("[Courses] No courses found in database.");
+              empty.style.display = "block";
+              return;
+            }
+
+            // Render courses
+            grid.innerHTML = courses.map(c => {
+              const id = c.course_id || "N/A";
+              const name = c.course_name || "Untitled Course";
+              const dept = c.department || "General";
+              const duration = c.duration || "N/A";
+              const eligibility = c.eligibility || "Contact Admissions";
+              const fee = formatFee(c.fee);
+
+              return `
+                <div class="card course-card" style="display: flex; flex-direction: column; height: 100%; padding: 24px;">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                    <span class="kbd" style="font-size: 10px; opacity: 0.7;">REF: ${id}</span>
+                    <span class="tag" style="background: rgba(79, 140, 255, 0.1); border: 1px solid rgba(79, 140, 255, 0.2);">${duration}</span>
+                  </div>
+                  <h3 style="margin-top: 0; margin-bottom: 8px; color: var(--brand); font-size: 18px;">${name}</h3>
+                  <p style="font-size: 13px; margin-bottom: 12px; color: #fff;"><strong>Dept:</strong> ${dept}</p>
+                  <p class="muted" style="font-size: 14px; flex-grow: 1; margin-bottom: 20px; line-height: 1.5;">${eligibility}</p>
+                  <div style="border-top: 1px solid var(--border); padding-top: 16px; margin-top: auto; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 12px; color: var(--muted);">Indicative Fee</span>
+                    <span style="font-weight: 700; color: #fff; font-size: 16px;">${fee}</span>
+                  </div>
+                </div>
+              `;
+            }).join("");
+            
+            grid.style.display = "grid";
+
+          } catch (err) {
+            clearTimeout(timeoutId);
+            console.error("[Courses] Fatal error:", err);
+            loading.style.display = "none";
+            error.style.display = "block";
+            
+            if (err.name === "AbortError") {
+              errorMsg.textContent = "Technical Details: The connection timed out. The server might be busy or unreachable.";
+            } else {
+              errorMsg.textContent = `Technical Details: ${err.message}`;
+            }
+          }
+        }
+
+        // Initialize on load
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", loadCourses);
+        } else {
+          loadCourses();
+        }
+      })();
+    </script>
+  </body>
+</html>

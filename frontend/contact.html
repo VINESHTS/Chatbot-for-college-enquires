@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>College Enquiry | Contact & Feedback</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/images/favicon.svg" />
+  <link rel="stylesheet" href="./assets/style.css" />
+  <style>
+    /* Modern UI Enhancements */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 30px;
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .contact-grid {
+        grid-template-columns: 1fr;
+        padding: 0 15px;
+      }
+    }
+
+    /* Glassmorphism Card Design */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    h2,
+    h3 {
+      margin-top: 0;
+      letter-spacing: -0.02em;
+    }
+
+    .muted-text {
+      color: rgba(230, 237, 247, 0.6);
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    /* Contact Details Section */
+    .contact-info-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .contact-info-item b {
+      color: var(--brand);
+      min-width: 80px;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    /* Star Rating UI */
+    .rating-container {
+      margin: 20px 0;
+    }
+
+    .star-rating {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .star-rating input {
+      display: none;
+    }
+
+    .star-rating label {
+      font-size: 42px;
+      color: rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .star-rating label:hover,
+    .star-rating label:hover~label,
+    .star-rating input:checked~label {
+      color: #fbbf24;
+      transform: scale(1.15);
+      filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.5));
+    }
+
+    /* Form Elements */
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: rgba(230, 237, 247, 0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .modern-select,
+    .modern-textarea {
+      width: 100%;
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      color: var(--text);
+      padding: 14px 18px;
+      font-size: 15px;
+      outline: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgba(230, 237, 247, 0.6)'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 18px center;
+      background-size: 18px;
+    }
+
+    .modern-textarea {
+      background-image: none;
+      min-height: 140px;
+      resize: none;
+    }
+
+    .modern-select:hover,
+    .modern-textarea:hover {
+      border-color: rgba(79, 140, 255, 0.4);
+      background: rgba(15, 26, 48, 0.8);
+    }
+
+    .modern-select:focus,
+    .modern-textarea:focus {
+      border-color: var(--brand);
+      background: #162545;
+      box-shadow: 0 0 0 4px rgba(79, 140, 255, 0.25);
+    }
+
+    /* Style the dropdown options */
+    .modern-select option {
+      background-color: #0b1220;
+      /* Matches --bg */
+      color: #e6edf7;
+      /* Matches --text */
+      padding: 12px;
+    }
+
+    .modern-select option:disabled {
+      color: rgba(230, 237, 247, 0.4);
+    }
+
+    /* Premium Submit Button */
+    .premium-btn {
+      width: 100%;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background: linear-gradient(135deg, var(--brand) 0%, #2563eb 100%);
+      border: none;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+    }
+
+    .premium-btn:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.5);
+      filter: brightness(1.1);
+    }
+
+    .premium-btn:active:not(:disabled) {
+      transform: translateY(-1px);
+    }
+
+    .premium-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Status Messages */
+    .status-box {
+      margin-top: 15px;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 14px;
+      display: none;
+      text-align: center;
+      font-weight: 500;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .status-box.success {
+      display: block;
+      background: rgba(34, 197, 94, 0.1);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+
+    .status-box.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.1);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .loading-spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="./index.html">
+        <div class="brand-badge">
+          <img src="./assets/images/logo-white.svg" alt="Logo" />
+        </div>
+        <span>College Enquiry</span>
+      </a>
+      <div class="nav-links">
+        <a href="./index.html">Home</a>
+        <a href="./about.html">About</a>
+        <a href="./courses.html">Courses</a>
+        <a href="./admission.html">Admission</a>
+        <a class="active" href="./contact.html">Contact</a>
+        <a href="./chatbot.html">Chatbot</a>
+      </div>
+    </div>
+  </div>
+
+  <main class="main-content" style="margin-top: 10px; margin-bottom: 10px;">
+    <div class="contact-grid">
+      <!-- Left Section: Contact Info -->
+      <div class="glass-card">
+        <h3>Get in Touch</h3>
+        <p class="muted-text">Find us at our campus or reach out via phone and email. Our team is here to assist you
+          with your academic journey.</p>
+
+        <div id="contactInfoList">
+          <div id="contactMsg" class="muted-text">Fetching contact details...</div>
+          <div id="contactBox"></div>
+        </div>
+      </div>
+
+      <!-- Right Section: Feedback Form -->
+      <div class="glass-card">
+        <h3>Chatbot Feedback</h3>
+        <p class="muted-text">Your experience helps us train our AI for better accuracy and helpfulness.</p>
+
+        <form id="feedbackForm">
+          <div class="input-group">
+            <label class="input-label">How was your experience?</label>
+            <div class="star-rating">
+              <input type="radio" name="rating" id="star5" value="5"><label for="star5">★</label>
+              <input type="radio" name="rating" id="star4" value="4"><label for="star4">★</label>
+              <input type="radio" name="rating" id="star3" value="3"><label for="star3">★</label>
+              <input type="radio" name="rating" id="star2" value="2"><label for="star2">★</label>
+              <input type="radio" name="rating" id="star1" value="1"><label for="star1">★</label>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" for="category">Issue Category</label>
+            <select class="modern-select" id="category" required>
+              <option value="" disabled selected>Select an option</option>
+              <option value="Helpful Response">Helpful Response</option>
+              <option value="Incorrect Answer">Incorrect Answer</option>
+              <option value="Slow Response">Slow Response</option>
+              <option value="UI Issue">UI Issue</option>
+              <option value="Translation Problem">Translation Problem</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" for="message">Additional Comments</label>
+            <textarea class="modern-textarea" id="message"
+              placeholder="Tell us more about your interaction..."></textarea>
+          </div>
+
+          <button type="submit" class="premium-btn" id="submitBtn">
+            <span>Submit Feedback</span>
+          </button>
+
+          <div id="statusBox" class="status-box"></div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <div class="footer">
+    <div class="container row">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <img src="./assets/images/logo-white.svg" alt="Logo" style="width: 24px; height: 24px;" />
+        <span>© 2026 College Enquiry Chatbot</span>
+      </div>
+      <div class="muted">Powered by AI Analytics</div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const API_BASE = "http://localhost:5000";
+
+      // 1. Fetch Contact Details
+      async function loadContact() {
+        const box = document.getElementById("contactBox");
+        const msg = document.getElementById("contactMsg");
+        try {
+          const res = await fetch(API_BASE + "/contact");
+          if (!res.ok) throw new Error();
+          const data = await res.json();
+          const c = data.contact;
+          if (!c) throw new Error();
+
+          msg.style.display = "none";
+          box.innerHTML = `
+              <div class="contact-info-item"><b>Phone</b> <span>${c.phone || "-"}</span></div>
+              <div class="contact-info-item"><b>Email</b> <span>${c.email || "-"}</span></div>
+              <div class="contact-info-item"><b>Hours</b> <span>${c.office_hours || "-"}</span></div>
+              <div class="contact-info-item"><b>Address</b> <span style="font-size: 13px;">${c.address || "ABC College"}</span></div>
+            `;
+        } catch (e) {
+          msg.textContent = "Unable to fetch contact information at this time.";
+        }
+      }
+      loadContact();
+
+      // 2. Feedback Submission
+      const form = document.getElementById("feedbackForm");
+      const submitBtn = document.getElementById("submitBtn");
+      const statusBox = document.getElementById("statusBox");
+
+      form.onsubmit = async (e) => {
+        e.preventDefault();
+
+        const ratingInput = form.querySelector('input[name="rating"]:checked');
+        const category = document.getElementById("category").value;
+        const message = document.getElementById("message").value;
+
+        if (!ratingInput) {
+          return showStatus("Please select a star rating to proceed.", "error");
+        }
+        if (!category) {
+          return showStatus("Please select a feedback category.", "error");
+        }
+
+        setLoading(true);
+        showStatus("", "");
+
+        try {
+          const response = await fetch(API_BASE + "/chat/feedback", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              star_rating: parseInt(ratingInput.value),
+              feedback_category: category,
+              feedback_message: message
+            })
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            showStatus("Success! Your feedback has been recorded.", "success");
+            form.reset();
+            // Reset stars visually
+            document.querySelectorAll('.star-rating label').forEach(l => l.style.color = '');
+          } else {
+            throw new Error(result.error || "Submission failed.");
+          }
+        } catch (err) {
+          showStatus(err.message, "error");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      function showStatus(text, type) {
+        statusBox.textContent = text;
+        statusBox.className = "status-box " + type;
+        if (text) {
+          statusBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+
+      function setLoading(isLoading) {
+        submitBtn.disabled = isLoading;
+        if (isLoading) {
+          submitBtn.innerHTML = '<div class="loading-spinner"></div> Processing...';
+        } else {
+          submitBtn.innerHTML = '<span>Submit Feedback</span>';
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

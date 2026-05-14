@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Staff Admin | College Enquiry Chatbot</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/images/favicon.svg" />
+    <link rel="stylesheet" href="./assets/style.css" />
+    <style>
+      body {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+      .panel {
+        width: min(480px, 100%);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card feature panel">
+      <div class="brand" style="margin-bottom: 20px; justify-content: center; flex-direction: column; text-align: center;">
+        <div class="brand-badge" style="width: 60px; height: 60px; margin-bottom: 10px;">
+          <img src="./assets/images/logo-white.svg" alt="Logo" />
+        </div>
+        <span style="font-weight: 800; font-size: 20px;">Staff Admin Portal</span>
+      </div>
+      <p class="muted" style="margin-top: 0">
+        This page is not linked from the public college website. Sign in with the administrator username created by
+            </p>
+      <form id="adminLoginForm">
+        <div class="field">
+          <label>Username</label>
+          <input id="username" autocomplete="username" required />
+        </div>
+        <div class="field" style="margin-top: 10px">
+          <label>Password</label>
+          <input id="password" type="password" autocomplete="current-password" required />
+        </div>
+        <div class="btn-row">
+          <button class="btn primary" type="submit">Sign in</button>
+        </div>
+        <p id="loginMsg" class="muted"></p>
+      </form>
+    </div>
+    <script src="./assets/admin.js"></script>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Chatbot Face -->
+  <rect x="55" y="85" width="90" height="65" rx="12" fill="white" />
+  <!-- Eyes -->
+  <circle cx="82" cy="115" r="7" fill="#1e3a8a" />
+  <circle cx="118" cy="115" r="7" fill="#1e3a8a" />
+  <!-- Mouth -->
+  <rect x="85" y="132" width="30" height="4" rx="2" fill="#1e3a8a" />
+  <!-- Graduation Cap -->
+  <path d="M100 35 L165 60 L100 85 L35 60 Z" fill="white" />
+  <path d="M70 60 L70 75 C70 85, 130 85, 130 75 L130 60" fill="white" />
+  <path d="M165 60 L165 90" stroke="white" stroke-width="4" stroke-linecap="round" />
+  <circle cx="165" cy="90" r="5" fill="white" />
+</svg>

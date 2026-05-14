@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>About | Academic Chatbot Assistant</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/images/favicon.svg" />
+    <link rel="stylesheet" href="./assets/style.css" />
+    <style>
+      .mission-box {
+        padding: 32px;
+        text-align: center;
+        background: linear-gradient(135deg, rgba(79, 140, 255, 0.1), rgba(34, 197, 94, 0.05));
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        margin-top: 20px;
+      }
+      .feature-icon {
+        font-size: 24px;
+        margin-bottom: 12px;
+        display: block;
+      }
+      .workflow-step {
+        position: relative;
+        padding-left: 40px;
+        margin-bottom: 24px;
+      }
+      .workflow-step::before {
+        content: attr(data-step);
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 28px;
+        height: 28px;
+        background: var(--brand);
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="nav">
+      <div class="container nav-inner">
+        <a class="brand" href="./index.html">
+          <div class="brand-badge">
+            <img src="./assets/images/logo-white.svg" alt="Logo" />
+          </div>
+          <span>College Enquiry</span>
+        </a>
+        <div class="nav-links">
+          <a href="./index.html">Home</a>
+          <a class="active" href="./about.html">About</a>
+          <a href="./courses.html">Courses</a>
+          <a href="./admission.html">Admission</a>
+          <a href="./contact.html">Contact</a>
+          <a href="./chatbot.html">Chatbot</a>
+        </div>
+      </div>
+    </div>
+
+    <main class="main-content" style="margin-top: 10px; margin-bottom: 10px;">
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="container">
+          <div class="hero-grid">
+            <div class="card hero-left">
+              <div class="tag">AI-Powered Assistant</div>
+              <h1>About the Academic Chatbot</h1>
+              <p>Our intelligent academic assistant is designed to provide students with instant, accurate, and reliable information. Whether you're a prospective student or currently enrolled, our AI-driven system ensures you never have to wait for answers to your academic queries.</p>
+              <div class="btn-row">
+                <a href="./chatbot.html" class="btn primary">Try the Chatbot</a>
+                <a href="./contact.html" class="btn">Get Support</a>
+              </div>
+            </div>
+            <div class="card hero-right" style="display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03);">
+                <div style="text-align: center;">
+                    <div class="brand-badge" style="width: 80px; height: 80px; margin: 0 auto 16px;">
+                        <img src="./assets/images/logo-white.svg" alt="Logo" style="width: 100%; height: 100%;" />
+                    </div>
+                    <div class="muted">Intelligent Academic Support</div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How It Works Section -->
+      <section class="section">
+        <div class="container">
+          <div class="two-col">
+            <div class="card" style="padding: 26px;">
+              <h3>How It Works</h3>
+              <p class="muted">A seamless bridge between students and institutional data.</p>
+              
+              <div class="workflow-step" data-step="1">
+                <strong>Ask a Question</strong>
+                <p class="muted" style="font-size: 14px;">Simply type your query in natural language, just like chatting with a friend.</p>
+              </div>
+              <div class="workflow-step" data-step="2">
+                <strong>Intent Detection</strong>
+                <p class="muted" style="font-size: 14px;">The AI analyzes your message to understand your specific needs and context.</p>
+              </div>
+              <div class="workflow-step" data-step="3">
+                <strong>Data Retrieval</strong>
+                <p class="muted" style="font-size: 14px;">The system queries our secure backend to fetch real-time, accurate records.</p>
+              </div>
+              <div class="workflow-step" data-step="4">
+                <strong>Structured Response</strong>
+                <p class="muted" style="font-size: 14px;">Get a clear, formatted answer instantly on your screen.</p>
+              </div>
+            </div>
+
+            <div class="card" style="padding: 26px;">
+              <h3>Why Use This Chatbot?</h3>
+              <ul style="list-style: none; padding: 0;">
+                <li style="margin-bottom: 16px; display: flex; gap: 12px;">
+                  <span style="color: var(--brand2);">✔</span>
+                  <div>
+                    <strong>24/7 Availability</strong>
+                    <p class="muted" style="font-size: 14px;">Get answers anytime, anywhere, without waiting for office hours.</p>
+                  </div>
+                </li>
+                <li style="margin-bottom: 16px; display: flex; gap: 12px;">
+                  <span style="color: var(--brand2);">✔</span>
+                  <div>
+                    <strong>Reliable Data</strong>
+                    <p class="muted" style="font-size: 14px;">Direct integration with official database records ensures accuracy.</p>
+                  </div>
+                </li>
+                <li style="margin-bottom: 16px; display: flex; gap: 12px;">
+                  <span style="color: var(--brand2);">✔</span>
+                  <div>
+                    <strong>Efficiency</strong>
+                    <p class="muted" style="font-size: 14px;">Reduces manual inquiry workload for both students and staff.</p>
+                  </div>
+                </li>
+                <li style="margin-bottom: 16px; display: flex; gap: 12px;">
+                  <span style="color: var(--brand2);">✔</span>
+                  <div>
+                    <strong>Language Support</strong>
+                    <p class="muted" style="font-size: 14px;">Communicate in multiple languages for better accessibility.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Mission Section -->
+      <section class="section">
+        <div class="container">
+          <div class="mission-box">
+            <h3>Our Mission</h3>
+            <p style="max-width: 700px; margin: 10px auto;">To simplify access to academic information and provide instant, accurate support. We strive to improve communication between students and institutional data through innovative AI solutions, making the academic journey smoother for everyone.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="footer">
+      <div class="container row">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <img src="./assets/images/logo-white.svg" alt="Logo" style="width: 24px; height: 24px;" />
+          <span>© 2026 College Enquiry Chatbot</span>
+        </div>
+        <div class="muted">Empowering Student Success</div>
+      </div>
+    </div>
+  </body>
+</html>

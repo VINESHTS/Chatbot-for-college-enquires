@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>College Enquiry Chatbot</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/images/favicon.svg" />
+  <link rel="stylesheet" href="./assets/style.css" />
+  <link rel="stylesheet" href="./assets/chat-page.css" />
+</head>
+
+<body class="theme-chatbot">
+  <div class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="./index.html">
+        <div class="brand-badge">
+          <img src="./assets/images/logo-white.svg" alt="Logo" />
+        </div>
+        <span> <h4>College Enquiry Chatbot</h4></span>
+      </a>
+      <div class="nav-links">
+        <a href="./index.html">Home</a>
+        <a href="./about.html">About</a>
+        <a href="./courses.html">Courses</a>
+        <a href="./admission.html">Admission</a>
+        <a href="./contact.html">Contact</a>
+        <a class="active" href="./chatbot.html">Chatbot</a>
+      </div>
+    </div>
+  </div>
+
+  <main class="main-content">
+    <div class="container page-title">
+       <p class="muted">
+        Ask about admissions, courses, departments, fees, scholarships, hostel, placements, important dates, and support
+        contacts.
+      
+      </p>
+    </div>
+
+    <div class="container section">
+      <div id="chatError" class="chat-error"></div>
+
+      <div class="chat-shell">
+        <aside class="chat-sidebar" aria-label="Chat history">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3>Chat history</h3>
+            <button type="button" class="btn-clear" id="clearHistoryBtn" title="Clear all history">Clear</button>
+          </div>
+          <div id="historyList"></div>
+        </aside>
+
+        <section class="chat-main" aria-label="Chatbot conversation">
+          <div class="chat-main-head">
+            <div class="chat-title-group">
+              <div class="title">Enquiry assistant</div>
+              <div class="sub">Powered by college database & NLP</div>
+            </div>
+            <div class="chat-head-actions">
+              <select id="langSelect" class="select" aria-label="Response language">
+                <option value="en">English</option>
+                <option value="hi">Hindi</option>
+                <option value="ta">Tamil</option>
+                <option value="ml">Malayalam</option>
+              </select>
+              <button type="button" class="btn" id="newChatBtn">New chat</button>
+            </div>
+          </div>
+
+          <div id="chatMessages" class="chat-messages" role="log" aria-live="polite"></div>
+
+          <div class="chat-input-row">
+            <div class="quick-actions" id="quickActions"></div>
+            <div class="chat-input-inner">
+              <div style="flex: 1; position: relative">
+                <div id="suggestPanel" class="suggest-panel" role="listbox"></div>
+                <textarea id="chatInput" rows="1" placeholder="Ask a question…" aria-label="Message"></textarea>
+              </div>
+              <button id="sendBtn" class="btn primary" type="button">Send</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <div class="footer">
+    <div class="container row">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        
+  </div>
+
+  <script src="./assets/chatbot.js"></script>
+</body>
+
+</html>

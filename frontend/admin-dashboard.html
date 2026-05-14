@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Dashboard | College Enquiry Chatbot</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/images/favicon.svg" />
+    <link rel="stylesheet" href="./assets/style.css" />
+    <style>
+      .admin-wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 18px;
+      }
+      details.card {
+        margin-bottom: 14px;
+      }
+      details summary {
+        cursor: pointer;
+        font-weight: 700;
+        padding: 4px 0;
+      }
+      .mini-form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+        margin: 10px 0;
+      }
+      .mini-form input,
+      .mini-form select,
+      .mini-form textarea {
+        width: 100%;
+      }
+      table th { text-transform: uppercase; font-size: 11px; color: #64748b; }
+      table td { vertical-align: middle; }
+      .badge { background: #e2e8f0; color: #334155; padding: 2px 6px; border-radius: 4px; font-size: 11px; }
+    </style>
+  </head>
+  <body>
+    <div class="admin-wrap" id="adminDashboard">
+      <div class="btn-row" style="justify-content: space-between; align-items: center">
+        <div class="brand">
+          <div class="brand-badge" style="width: 32px; height: 32px;">
+            <img src="./assets/images/logo-white.svg" alt="Logo" />
+          </div>
+          <span style="font-weight: 800">Admin Dashboard</span>
+        </div>
+        <div class="btn-row">
+          <span class="muted" id="dashStatus">Loading…</span>
+          <button class="btn" type="button" id="reloadAllBtn">Reload all</button>
+          <button class="btn" type="button" id="logoutBtn">Logout</button>
+        </div>
+      </div>
+
+      <p class="muted">
+        Protected JSON APIs under <span class="kbd">/admin/*</span>. This interface is for authorised staff only — it is intentionally not linked from the
+        public chat pages.
+      </p>
+
+      <details class="card feature" open>
+        <summary>FAQs</summary>
+        <form id="faqForm" class="mini-form">
+          <input type="hidden" id="faqId" />
+          <div class="field"><label>Intent</label><input id="faqIntent" placeholder="admission_process" /></div>
+          <div class="field"><label>Category</label><input id="faqCategory" placeholder="Admission" /></div>
+          <div class="field" style="grid-column: 1 / -1"><label>Question</label><textarea id="faqQuestion" rows="2"></textarea></div>
+          <div class="field" style="grid-column: 1 / -1"><label>Response</label><textarea id="faqResponse" rows="3"></textarea></div>
+          <div class="btn-row">
+            <button class="btn primary" type="submit">Save</button>
+            <button class="btn" type="button" id="faqReset">Clear</button>
+          </div>
+        </form>
+        <div style="overflow: auto"><table class="table"><thead><tr><th>ID</th><th>Category</th><th>Question</th><th></th></tr></thead><tbody id="faqRows"></tbody></table></div>
+      </details>
+
+      <details class="card feature">
+        <summary>Admission Q&amp;A</summary>
+        <form id="admForm" class="mini-form">
+          <input type="hidden" id="admId" />
+          <div class="field"><label>Category</label><input id="admCategory" /></div>
+          <div class="field" style="grid-column: 1 / -1"><label>Question</label><textarea id="admQuestion" rows="2"></textarea></div>
+          <div class="field" style="grid-column: 1 / -1"><label>Answer</label><textarea id="admAnswer" rows="3"></textarea></div>
+          <div class="btn-row">
+            <button class="btn primary" type="submit">Save</button>
+            <button class="btn" type="button" id="admReset">Clear</button>
+          </div>
+        </form>
+        <div style="overflow: auto"><table class="table"><thead><tr><th>ID</th><th>Question</th><th></th></tr></thead><tbody id="admRows"></tbody></table></div>
+      </details>
+
+      <details class="card feature">
+        <summary>Departments</summary>
+        <form id="deptForm" class="mini-form">
+          <input type="hidden" id="deptId" />
+          <div class="field"><label>Name</label><input id="deptName" required /></div>
+          <div class="field"><label>Head</label><input id="deptHead" /></div>
+          <div class="field"><label>Email</label><input id="deptEmail" /></div>
+          <div class="field"><label>Phone</label><input id="deptPhone" /></div>
+          <div class="btn-row">
+            <button class="btn primary" type="submit">Save</button>
+            <button class="btn" type="button" id="deptReset">Clear</button>
+          </div>
+        </form>
+        <div style="overflow: auto"><table class="table"><thead><tr><th>ID</th><th>Name</th><th>Head</th><th></th></tr></thead><tbody id="deptRows"></tbody></table></div>
+      </details>
+
+      <details class="card feature">
+        <summary>Courses</summary>
+        <form id="courseForm" class="mini-form">
+          <input type="hidden" id="courseId" />
+          <div class="field"><label>Name</label><input id="courseName" required /></div>
+          <div class="field"><label>Department</label><input id="courseDept" /></div>
+          <div class="field"><label>Duration</label><input id="courseDuration" /></div>
+          <div class="field"><label>Fee (total indicative)</label><input id="courseFee" type="number" step="0.01" /></div>
+          <div class="field"><label>Intake Capacity</label><input id="courseIntake" type="number" /></div>
+          <div class="field"><label>Admission Start (YYYY-MM-DD)</label><input id="courseStart" type="date" /></div>
+          <div class="field"><label>Admission End (YYYY-MM-DD)</label><input id="courseEnd" type="date" /></div>
+          <div class="field"><label>Status</label><select id="courseStatus" class="select"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+          <div class="field" style="grid-column: 1 / -1"><label>Eligibility</label><textarea id="courseElig" rows="2"></textarea></div>
+          <div class="field" style="grid-column: 1 / -1"><label>Description</label><textarea id="courseDesc" rows="2"></textarea></div>
+          <div class="btn-row">
+            <button class="btn primary" type="submit">Save</button>
+            <button class="btn" type="button" id="courseReset">Clear</button>
+          </div>
+        </form>
+        <div style="overflow: auto"><table class="table"><thead><tr><th>ID</th><th>Course</th><th>Dept</th><th>Status</th><th></th></tr></thead><tbody id="courseRows"></tbody></table></div>
+      </details>
+
+      <details class="card feature">
+        <summary>Fee structure</summary>
+        <form id="feeForm" class="mini-form">
+          <input type="hidden" id="feeId" />
+          <div class="field"><label>Course name</label><input id="feeCourseName" required /></div>
+          <div class="field"><label>Semester No.</label><input id="feeSemester" type="number" /></div>
+          <div class="field"><label>Fee type</label><input id="feeType" required /></div>
+          <div class="field"><label>Amount</label><input id="feeAmount" type="number" step="0.01" required /></div>
+          <div class="field"><label>Duration label</label><input id="feeDuration" /></div>
+          <div class="field"><label>Status</label><select id="feeStatus" class="select"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+          <div class="field" style="grid-column: 1 / -1"><label>Description</label><textarea id="feeDesc" rows="2"></textarea></div>
+          <div class="btn-row">
+            <button class="btn primary" type="submit">Save</button>
+            <button class="btn" type="button" id="feeReset">Clear</button>
+          </div>
+        </form>
+        <div style="overflow: auto"><table class="table"><thead><tr><th>ID</th><th>Course</th><th>Type</th><th>Amount</th><th>Status</th><th></th></tr></thead><tbody id="feeRows"></tbody></table></div>
+      </details>
+
+      <details class="card feature">
+        <summary>Scholarships</summary>
+        <form id="schForm" class="mini-form">
+          <input type="hidden" id="schId" />
+          <div class="field"><label>Course name (optional)</label><input id="schCourseName" /></div>
+          <div class="field"><label>Name</label><input id="schName" required /></div>
+          <div class="field"><label>Amount</label><input id="schAmount" /></div>
+          <div class="field"><label>Deadline (YYYY-MM-DD)</label><input id="schDeadline" type="date" /></div>
+          <div class="field"><label>Status</label><select id="schStatus" class="select"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+          <div class="field" style="grid-column: 1 / -1"><label>Eligibility</label><textarea id="schElig" rows="2"></textarea></div>
+          <div class="field" style="grid-column: 1 / -1"><label>Description</label><textarea id="schDesc" rows="2"></textarea></div>
+          <div class="btn-row">
+            <button class="btn primary" type="submit">Save</button>
+            <button class="btn" type="button" id="schReset">Clear</button>
+          </div>
+        </form>
+        <div style="overflow: auto"><table class="table"><thead><tr><th>ID</th><th>Name</th><th>Course</th><th>Status</th><th></th></tr></thead><tbody id="schRows"></tbody></table></div>
+      </details>
+
+      <details class="card feature">
+        <summary>Hostel</summary>
+        <form id="hostelForm" class="mini-form">
+          <input type="hidden" id="hostelId" />
+          <div class="field"><label>Type / block</label><input id="hostelType" required /></div>
+          <div class="field"><label>Fee</label><input id="hostelFee" type="number" step="0.01" /></div>
+          <div class="field"><label>Total Rooms</label><input id="hostelTotalRooms" type="number" /></div>
+          <div class="field"><label>Available Rooms</label><input id="hostelAvailableRooms" type="number" /></div>
+          <div class="field"><label>Warden Name</label><input id="hostelWarden" /></div>
+          <div class="field"><label>Status</label><select id="hostelStatus" class="select"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+          <div class="field" style="grid-column: 1 / -1"><label>Facilities</label><textarea id="hostelFac" rows="2"></textarea></div>
+          <div class="btn-row">
+            <button class="btn primary" type="submit">Save</button>
+            <button class="btn" type="button" id="hostelReset">Clear</button>
+          </div>
+        </form>
+        <div style="overflow: auto"><table class="table"><thead><tr><th>ID</th><th>Type</th><th>Rooms</th><th>Status</th><th></th></tr></thead><tbody id="hostelRows"></tbody></table></div>
+      </details>
+
+      <details class="card feature">
+        <summary>Placements</summary>
+        <form id="plcForm" class="mini-form">
+          <input type="hidden" id="plcId" />
+          <div class="field"><label>Course name (optional)</label><input id="plcCourseName" /></div>
+          <div class="field"><label>Company</label><input id="plcCompany" required /></div>
+          <div class="field"><label>Package</label><input id="plcPkg" /></div>
+          <div class="field"><label>Success rate</label><input id="plcRate" /></div>
+          <div class="field"><label>Hiring Year</label><input id="plcYear" type="number" min="2000" max="2100" /></div>
+          <div class="field"><label>Status</label><select id="plcStatus" class="select"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+          <div class="field" style="grid-column: 1 / -1"><label>Roles</label><textarea id="plcRoles" rows="2"></textarea></div>
+          <div class="btn-row">
+            <button class="btn primary" type="submit">Save</button>
+            <button class="btn" type="button" id="plcReset">Clear</button>
+          </div>
+        </form>
+        <div style="overflow: auto"><table class="table"><thead><tr><th>ID</th><th>Company</th><th>Year</th><th>Status</th><th></th></tr></thead><tbody id="plcRows"></tbody></table></div>
+      </details>
+
+      <details class="card feature">
+        <summary>Contact support</summary>
+        <form id="conForm" class="mini-form">
+          <input type="hidden" id="conId" />
+          <div class="field"><label>Department</label><input id="conDept" required /></div>
+          <div class="field"><label>Person</label><input id="conPerson" /></div>
+          <div class="field"><label>Email</label><input id="conEmail" /></div>
+          <div class="field"><label>Phone</label><input id="conPhone" /></div>
+          <div class="field"><label>Office hours</label><input id="conHours" /></div>
+          <div class="field"><label>Status</label><select id="conStatus" class="select"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+          <div class="btn-row">
+            <button class="btn primary" type="submit">Save</button>
+            <button class="btn" type="button" id="conReset">Clear</button>
+          </div>
+        </form>
+        <div style="overflow: auto"><table class="table"><thead><tr><th>ID</th><th>Department</th><th>Person</th><th>Status</th><th></th></tr></thead><tbody id="conRows"></tbody></table></div>
+      </details>
+
+      <details class="card feature">
+        <summary>Important dates</summary>
+        <form id="dateForm" class="mini-form">
+          <input type="hidden" id="dateId" />
+          <div class="field"><label>Course name (optional)</label><input id="dateCourseName" /></div>
+          <div class="field"><label>Event name</label><input id="dateName" required /></div>
+          <div class="field"><label>Event type</label>
+             <select id="dateType" class="select">
+                <option value="general">General</option>
+                <option value="admission">Admission</option>
+                <option value="exam">Exam</option>
+                <option value="semester">Semester</option>
+                <option value="placement">Placement</option>
+                <option value="scholarship">Scholarship</option>
+                <option value="hostel">Hostel</option>
+             </select>
+          </div>
+          <div class="field"><label>Date (YYYY-MM-DD)</label><input id="dateWhen" type="date" required /></div>
+          <div class="field"><label>Status</label><select id="dateStatus" class="select"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+          <div class="field" style="grid-column: 1 / -1"><label>Description</label><textarea id="dateDesc" rows="2"></textarea></div>
+          <div class="btn-row">
+            <button class="btn primary" type="submit">Save</button>
+            <button class="btn" type="button" id="dateReset">Clear</button>
+          </div>
+        </form>
+        <div style="overflow: auto"><table class="table"><thead><tr><th>ID</th><th>Event</th><th>Type</th><th>Date</th><th>Status</th><th></th></tr></thead><tbody id="dateRows"></tbody></table></div>
+      </details>
+
+      <details class="card feature">
+        <summary>User query logs &amp; analytics</summary>
+        
+        <h4 style="margin: 10px 0 6px">Analytics</h4>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
+          <div class="card" style="flex: 1; min-width: 200px;">
+             <h5 style="margin: 0; color: #64748b;">Total Queries</h5>
+             <div id="analyticsTotals" style="font-size: 28px; font-weight: bold; margin-top: 8px;">0</div>
+          </div>
+          <div class="card" style="flex: 2; min-width: 300px; padding: 10px;">
+             <h5 style="margin: 0 0 10px 0; color: #64748b;">By Intent</h5>
+             <div style="overflow: auto; max-height: 200px;"><table class="table"><thead><tr><th>Intent</th><th>Count</th></tr></thead><tbody id="analyticsIntent"></tbody></table></div>
+          </div>
+          <div class="card" style="flex: 1; min-width: 200px; padding: 10px;">
+             <h5 style="margin: 0 0 10px 0; color: #64748b;">By Language</h5>
+             <div style="overflow: auto; max-height: 200px;"><table class="table"><thead><tr><th>Lang</th><th>Count</th></tr></thead><tbody id="analyticsLang"></tbody></table></div>
+          </div>
+        </div>
+
+        <h4 style="margin: 10px 0 6px">Latest queries</h4>
+        <div style="overflow: auto; max-height: 400px; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <table class="table">
+            <thead style="position: sticky; top: 0; background: #fff; z-index: 1; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+              <tr>
+                <th>Time</th>
+                <th>Query</th>
+                <th>Intent</th>
+                <th>Bot Response</th>
+                <th>Lang</th>
+              </tr>
+            </thead>
+            <tbody id="queryLogsRows"></tbody>
+          </table>
+        </div>
+      </details>
+
+      <details class="card feature">
+        <summary>Admin activity logs</summary>
+        <div style="overflow: auto; max-height: 400px; border: 1px solid #e2e8f0; border-radius: 8px;">
+          <table class="table">
+            <thead style="position: sticky; top: 0; background: #fff; z-index: 1; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+              <tr>
+                <th>Time</th>
+                <th>Admin ID</th>
+                <th>Action</th>
+                <th>Target</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody id="adminActRows"></tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+
+    <script src="./assets/admin.js"></script>
+  </body>
+</html>
